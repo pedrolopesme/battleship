@@ -1,0 +1,9 @@
+version: '3.6'
+services:
+  app:
+    container_name: "citta-server"
+    image: "citta-server:latest"
+    volumes:
+      - "./:/go/src/github.com/pedrolopesme/citta-server"
+    ports:
+      - "3030:3030"

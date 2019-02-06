@@ -14,13 +14,13 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(time.Millisecond * 100)
+			time.Sleep(time.Millisecond * 500)
 			eventString := fmt.Sprintf("the time is %v", time.Now())
 			log.Println("Receiving event")
 			broker.Notifier <- []byte(eventString)
 		}
 	}()
 
-	log.Fatal("HTTP server error: ", http.ListenAndServe("localhost:3030", broker))
+	log.Fatal("HTTP server error: ", http.ListenAndServe(":3030", broker))
 
 }
