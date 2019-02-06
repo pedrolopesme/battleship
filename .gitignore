@@ -38,3 +38,6 @@ _vendor*
 
 # Ignoring gobuild dir
 .gobuild*
+
+# Project specifics
+citta-server
