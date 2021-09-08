@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/pedrolopesme/citta-server/core"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/pedrolopesme/citta-server/core"
 )
 
 func main() {
@@ -14,9 +15,8 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(time.Millisecond * 500)
+			//time.Sleep(time.Millisecond * 500)
 			eventString := fmt.Sprintf("the time is %v", time.Now())
-			log.Println("Receiving event REALLY?")
 			broker.Notifier <- []byte(eventString)
 		}
 	}()
