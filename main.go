@@ -1,5 +1,9 @@
 package main
 
+import (
+	gameServer "github.com/pedrolopesme/citta-server/cmd"
+)
+
 // func main() {
 
 // 	broker := core.NewServer()
@@ -17,5 +21,5 @@ package main
 // }
 
 func main() {
-
+	gameServer.Server()
 }

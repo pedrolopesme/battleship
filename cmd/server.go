@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"github.com/gin-gonic/gin"
-	gameHandler "github.com/pedrolopesme/citta-server/core/handler/game"
+	gameHandler "github.com/pedrolopesme/citta-server/cor"
 	gameRepository "github.com/pedrolopesme/citta-server/core/repositories/game"
 	gameService "github.com/pedrolopesme/citta-server/core/service/game"
 )
 
-func server() {
+func Server() {
 	repo := gameRepository.NewMemory()
 	gamesService := gameService.New(repo)
 	gamesHandler := gameHandler.NewHTTPHandler(gamesService)
