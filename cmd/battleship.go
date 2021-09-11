@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/gin-gonic/gin"
-	gameService "github.com/pedrolopesme/citta-server/core/services/game"
-	gameHandler "github.com/pedrolopesme/citta-server/handlers/game"
+	gameHandler "github.com/pedrolopesme/citta-server/api/game"
+	gameService "github.com/pedrolopesme/citta-server/internal/services/game"
 	gameRepository "github.com/pedrolopesme/citta-server/repositories/game"
 )
 

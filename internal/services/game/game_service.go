@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/pedrolopesme/citta-server/core/domain"
-	"github.com/pedrolopesme/citta-server/core/ports"
+	"github.com/pedrolopesme/citta-server/internal/domain"
+	"github.com/pedrolopesme/citta-server/internal/ports"
 )
 
 type gameService struct {

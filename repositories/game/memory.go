@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/pedrolopesme/citta-server/core/domain"
+	"github.com/pedrolopesme/citta-server/internal/domain"
 )
 
 type memory struct {
