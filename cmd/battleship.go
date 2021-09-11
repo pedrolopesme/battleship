@@ -3,7 +3,8 @@ package cmd
 import (
 	"net/http"
 
-	api "github.com/pedrolopesme/citta-server/api/game"
+	api "github.com/pedrolopesme/citta-server/api"
+	"go.uber.org/zap"
 )
 
 // func Server() {
@@ -18,19 +19,26 @@ import (
 // }
 
 type BattleshipServer struct {
+	logger *zap.Logger
 }
 
 func NewBattleshipServer() *BattleshipServer {
-	return &BattleshipServer{}
-}
+	logger, err := zap.NewProduction()
+	if err != nil {
+		panic(err)
+	}
 
-func (b *BattleshipServer) setupRoutes() {
-	http.HandleFunc("/game/ws", api.NewGameWebsocket().Run)
+	return &BattleshipServer{
+		logger: logger,
+	}
 }
 
 func (b *BattleshipServer) Run() error {
-	b.setupRoutes()
+	api.SetupRoutes()
 
-	http.ListenAndServe(":8080", nil)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		b.logger.Error(err.Error())
+		return err
+	}
 	return nil
 }
