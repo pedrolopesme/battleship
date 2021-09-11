@@ -6,6 +6,22 @@ import (
 	"net/http"
 )
 
+// func main() {
+
+// 	broker := core.NewServer()
+
+// 	go func() {
+// 		for {
+// 			//time.Sleep(time.Millisecond * 500)
+// 			eventString := fmt.Sprintf("the time is %v", time.Now())
+// 			broker.Notifier <- []byte(eventString)
+// 		}
+// 	}()
+
+// 	log.Fatal("HTTP server error: ", http.ListenAndServe(":3030", broker))
+
+// }
+
 type Broker struct {
 	// Events are pushed to this channel by the main events-gathering routine
 	Notifier chan []byte
