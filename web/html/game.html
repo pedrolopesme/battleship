@@ -27,6 +27,10 @@
             socket.send("Hi From the Client!")
         };
         
+		socket.onmessage = function(str) {
+			console.log("Someone sent: ", str);
+		};
+
         socket.onclose = event => {
             console.log("Socket Closed Connection: ", event);
             socket.send("Client Closed!")
@@ -36,10 +40,14 @@
             console.log("Socket Error: ", error);
         };
 
+		window.sendEvent = (message) => {
+			socket.send(message)
+		}
     </script>
 
 </head>
 <body>
 	<h1> Battleship </h1>
+	<button onclick="sendEvent('attack!');">Attack</button>
 </body>
 </html>

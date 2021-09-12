@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -38,11 +39,25 @@ func (gws *GameWebsocket) Run(w http.ResponseWriter, r *http.Request) {
 
 	gws.socket = conn
 
-	gws.listen()
+	ticker := time.NewTicker(1 * time.Second)
+	quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				gws.write("Hello1")
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+
+	gws.read()
 }
 
 // Listing is called whenever an event happens
-func (gws *GameWebsocket) listen() {
+func (gws *GameWebsocket) read() {
 	if gws.socket == nil {
 		return
 	}
@@ -55,6 +70,13 @@ func (gws *GameWebsocket) listen() {
 			return
 		}
 
-		fmt.Println(messageType, message)
+		fmt.Println(messageType, string(message))
+	}
+}
+
+func (gws *GameWebsocket) write(message string) {
+	if err := gws.socket.WriteMessage(1, []byte(message)); err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 }
