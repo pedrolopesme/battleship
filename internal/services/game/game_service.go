@@ -27,13 +27,22 @@ func (srv *gameService) Get(id string) (*domain.Game, error) {
 }
 
 func (srv *gameService) Create(cols, rows uint) (*domain.Game, error) {
-	gm := &domain.Game{
-		ID: uuid.New().String(),
+	board := domain.Board{
+		Settings: domain.BoardSettings{
+			Cols: cols,
+			Rows: rows,
+		},
 	}
 
-	if err := srv.repository.Save(*gm); err != nil {
+	game := domain.Game{
+		ID:    uuid.New().String(),
+		State: domain.GAME_WAITING,
+		Board: board,
+	}
+
+	if err := srv.repository.Save(game); err != nil {
 		return nil, errors.New("impossible to save game")
 	}
 
-	return gm, nil
+	return &game, nil
 }
