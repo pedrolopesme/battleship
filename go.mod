@@ -1,4 +1,4 @@
-module github.com/pedrolopesme/citta-server
+module github.com/pedrolopesme/battleship
 
 go 1.17
 

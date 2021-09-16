@@ -1,8 +1,8 @@
-# citta-server
-Citta Server is a very simple multiplayer gaming server over HTTP 2 and [Server Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
+# battle-server
+Battleship Server is a very simple multiplayer gaming server over HTTP 2 and Websocket
 
 ### TODO
-In order to release `0.1`, Citta Server needs to:
+In order to release `0.1`, Battleship Server needs to:
 
 - [ ] Create an API to register a new Player
 - [ ] Create an API to create a new Match
@@ -20,7 +20,7 @@ In order to release `0.1`, Citta Server needs to:
 
 ### Makefile
 
-This project provides a Makefile with all common operations need to develop, test and build citta-server.
+This project provides a Makefile with all common operations need to develop, test and build battleship-server.
 
 * build: generates binaries
 * test: runs all tests

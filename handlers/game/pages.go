@@ -3,7 +3,7 @@ package game
 import (
 	"net/http"
 
-	"github.com/pedrolopesme/citta-server/internal/ports"
+	"github.com/pedrolopesme/battleship/internal/ports"
 )
 
 type PagesHandler struct {

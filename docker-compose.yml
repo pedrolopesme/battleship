@@ -1,9 +1,9 @@
 version: '3.6'
 services:
   app:
-    container_name: "citta-server"
-    image: "citta-server:latest"
+    container_name: "battleship-server"
+    image: "battleship-server:latest"
     volumes:
-      - "./:/go/src/github.com/pedrolopesme/citta-server"
+      - "./:/go/src/github.com/pedrolopesme/battleship-server"
     ports:
       - "3030:3030"

@@ -40,4 +40,4 @@ _vendor*
 .gobuild*
 
 # Project specifics
-citta-server
+battleship-server

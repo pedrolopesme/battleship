@@ -4,23 +4,23 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 GOFMT=$(GOCMD)fmt
-BINARY_NAME=$(GOPATH)/bin/citta-server
+BINARY_NAME=$(GOPATH)/bin/battleship-server
 BINARY_UNIX=$(BINARY_NAME)_unix
 
 build:
-	@echo "=============Building Citta Server============="
+	@echo "=============Building battleship Server============="
 	$(GOBUILD) -o $(BINARY_NAME) -v
 
 run:
-	@echo "=============Running Citta Server============="
+	@echo "=============Running battleship Server============="
 	go run main.go
 
 test:
-	@echo "=============Running Citta Server Tests============="
+	@echo "=============Running battleship Server Tests============="
 	$(GOTEST) -v ./...
 
 clean: 
-	@echo "=============Removing Citta Server============="
+	@echo "=============Removing battleship Server============="
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_UNIX)
@@ -30,27 +30,27 @@ fmt:
 	$(GOFMT) -w */*.go
 
 docker-build:
-	@echo "=============Building Local Citta Server Docker Image============="
-	docker build -f ./Dockerfile -t citta-server .
+	@echo "=============Building Local battleship Server Docker Image============="
+	docker build -f ./Dockerfile -t battleship-server .
 
 docker-run: docker-build
-	@echo "=============Starting Citta-Server Container============="
+	@echo "=============Starting battleship-Server Container============="
 	docker-compose up -d
 
 docker-stop:
-	@echo "=============Stopping Citta-Server Container============="
+	@echo "=============Stopping battleship-Server Container============="
 	docker-compose down
 
 docker-logs:
-	@echo "=============Getting Citta-Server Logs============="
+	@echo "=============Getting battleship-Server Logs============="
 	docker-compose logs -f
 
 docker-shell:
 	@echo "=============Accessing Container Shell============="
-	docker exec -t citta-server bash
+	docker exec -t battleship-server bash
 
 docker-clean: docker-down
 	@echo "=============Cleaning up============="
-	rm -f citta-server
+	rm -f battleship-server
 	docker system prune -f
 	docker volume prune -f

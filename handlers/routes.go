@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	game "github.com/pedrolopesme/citta-server/handlers/game"
-	"github.com/pedrolopesme/citta-server/internal/ports"
+	game "github.com/pedrolopesme/battleship/handlers/game"
+	"github.com/pedrolopesme/battleship/internal/ports"
 )
 
 func SetupRoutes(gamesService ports.GameService) {

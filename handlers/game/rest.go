@@ -2,7 +2,7 @@ package game
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pedrolopesme/citta-server/internal/ports"
+	"github.com/pedrolopesme/battleship/internal/ports"
 )
 
 type HTTPHandler struct {

@@ -3,10 +3,10 @@ package cmd
 import (
 	"net/http"
 
-	"github.com/pedrolopesme/citta-server/handlers"
-	gamePorts "github.com/pedrolopesme/citta-server/internal/ports"
-	gameRepository "github.com/pedrolopesme/citta-server/internal/repositories/game"
-	gameService "github.com/pedrolopesme/citta-server/internal/services/game"
+	"github.com/pedrolopesme/battleship/handlers"
+	gamePorts "github.com/pedrolopesme/battleship/internal/ports"
+	gameRepository "github.com/pedrolopesme/battleship/internal/repositories/game"
+	gameService "github.com/pedrolopesme/battleship/internal/services/game"
 	"go.uber.org/zap"
 )
 

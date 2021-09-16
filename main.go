@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	cmd "github.com/pedrolopesme/citta-server/cmd"
+	cmd "github.com/pedrolopesme/battleship/cmd"
 )
 
 func main() {
