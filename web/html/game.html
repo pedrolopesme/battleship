@@ -18,31 +18,9 @@
 
 	<link rel="shortcut icon" href="">
 
+	<script src="/statics/js/game.js"></script>
 	<script>
-        let socket = new WebSocket("ws://localhost:8080/game/ws");
-        console.log("Attempting Connection...");
-
-        socket.onopen = () => {
-            console.log("Successfully Connected");
-            socket.send("Hi From the Client!")
-        };
-        
-		socket.onmessage = function(str) {
-			console.log("Someone sent: ", str);
-		};
-
-        socket.onclose = event => {
-            console.log("Socket Closed Connection: ", event);
-            socket.send("Client Closed!")
-        };
-
-        socket.onerror = error => {
-            console.log("Socket Error: ", error);
-        };
-
-		window.sendEvent = (message) => {
-			socket.send(message)
-		}
+		window.game = new BattleshipClient();
     </script>
 
 </head>

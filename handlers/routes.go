@@ -10,7 +10,11 @@ import (
 
 func SetupRoutes(gamesService ports.GameService) {
 	r := mux.NewRouter()
-	r.HandleFunc("/game/ws", game.NewGameWebsocket().Run)
+	r.HandleFunc("/game/ws", game.NewGameWebsocket(gamesService).Run)
 	r.HandleFunc("/game", game.NewPagesHandler(gamesService).HomePage)
+
+	fs := http.FileServer(http.Dir("./web/"))
+	r.PathPrefix("/statics/").Handler(http.StripPrefix("/statics/", fs))
+
 	http.Handle("/", r)
 }

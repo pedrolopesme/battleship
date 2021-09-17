@@ -1,12 +1,14 @@
 package game
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/pedrolopesme/battleship/internal/domain"
+	"github.com/pedrolopesme/battleship/internal/ports"
 )
 
 const (
@@ -15,16 +17,18 @@ const (
 )
 
 type GameWebsocket struct {
-	upgrader websocket.Upgrader
-	socket   *websocket.Conn
+	upgrader    websocket.Upgrader
+	socket      *websocket.Conn
+	gameService ports.GameService
 }
 
-func NewGameWebsocket() *GameWebsocket {
+func NewGameWebsocket(gameService ports.GameService) *GameWebsocket {
 	return &GameWebsocket{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  readBufferSize,
 			WriteBufferSize: writeBufferSize,
 		},
+		gameService: gameService,
 	}
 }
 
@@ -39,20 +43,6 @@ func (gws *GameWebsocket) Run(w http.ResponseWriter, r *http.Request) {
 
 	gws.socket = conn
 
-	ticker := time.NewTicker(1 * time.Second)
-	quit := make(chan struct{})
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				gws.write("Hello1")
-			case <-quit:
-				ticker.Stop()
-				return
-			}
-		}
-	}()
-
 	gws.read()
 }
 
@@ -66,11 +56,13 @@ func (gws *GameWebsocket) read() {
 		messageType, message, err := gws.socket.ReadMessage()
 
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(err) // TODO replace by a proper logger
 			return
 		}
 
 		fmt.Println(messageType, string(message))
+		response := proxyEvent(gws.gameService, message)
+		gws.write(response)
 	}
 }
 
@@ -79,4 +71,41 @@ func (gws *GameWebsocket) write(message string) {
 		fmt.Println(err.Error())
 		return
 	}
+}
+
+// proxies websocket events sent by clients to game service funcs
+// TODO should it be here?
+func proxyEvent(gameService ports.GameService, message []byte) string {
+	if len(message) == 0 {
+		return ""
+	}
+
+	event := domain.Event{}
+	if err := json.Unmarshal([]byte(message), &event); err != nil {
+		fmt.Println("ERROR", err) // TODO replace by a proper logger
+		return ""
+	}
+
+	if event.EventType == domain.EVENT_NEW_GAME {
+		return createGame(gameService)
+	} else {
+		return ""
+	}
+}
+
+// creates a game and return its json representation
+func createGame(gameService ports.GameService) string {
+	game, err := gameService.Create()
+	if err != nil {
+		fmt.Println("ERROR", err) // TODO replace by a proper logger
+		return ""
+	}
+
+	gameJson, err := json.Marshal(game)
+	if err != nil {
+		fmt.Println("ERROR", err) // TODO replace by a proper logger
+		return ""
+	}
+
+	return string(gameJson)
 }

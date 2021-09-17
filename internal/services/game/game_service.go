@@ -8,6 +8,11 @@ import (
 	"github.com/pedrolopesme/battleship/internal/ports"
 )
 
+const (
+	GAME_ROWS = 2
+	GAME_COLS = 2
+)
+
 type gameService struct {
 	repository ports.GameRepository
 }
@@ -26,11 +31,11 @@ func (srv *gameService) Get(id string) (*domain.Game, error) {
 	return game, nil
 }
 
-func (srv *gameService) Create(cols, rows uint) (*domain.Game, error) {
+func (srv *gameService) Create() (*domain.Game, error) {
 	board := domain.Board{
 		Settings: domain.BoardSettings{
-			Cols: cols,
-			Rows: rows,
+			Cols: GAME_COLS,
+			Rows: GAME_ROWS,
 		},
 	}
 
