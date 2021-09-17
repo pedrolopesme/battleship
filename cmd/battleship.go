@@ -10,17 +10,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// func Server() {
-// 	repo := gameRepository.NewMemory()
-// 	service := gameService.New(repo)
-// 	handler := gameHandler.NewHTTPHandler(service)
-
-// 	router := gin.New()
-// 	router.GET("/games/:id", handler.Get)
-
-// 	router.Run(":8080")
-// }
-
 type BattleshipServer struct {
 	logger      *zap.Logger
 	gameService gamePorts.GameService
