@@ -1,4 +1,31 @@
 const EVENT_NEW_GAME = "new_game";
+const EVENT_ATTACK = "attack";
+
+var rawRender = (game) => {
+    let boardWrapper = document.getElementById("board");
+    let board = document.createElement("table");
+    board.style.width  = '500px';
+    board.style.border = '2px solid navy';
+
+    boardSettings = game["board"]["settings"];
+    for (r = 0; r < boardSettings["rows"]; r++){
+        var tr = board.insertRow();
+        for(c = 0; c < boardSettings["columns"]; c++) {
+            var attackBtn = document.createElement("button");
+            attackBtn.appendChild(document.createTextNode("Attack " + r + ":" + c))
+            attackBtn.onclick = window.game.attack(r,c);
+
+            var td = tr.insertCell();
+            td.style.border = '1px solid #ccc';
+            td.style.color = '#ccc';
+            td.appendChild(attackBtn);
+        }
+    }
+
+    boardWrapper.innerHTML = '';
+    boardWrapper.appendChild(board);    
+}
+
 
 var debugRender = (game) => {
     let debugWrapper = document.getElementById("debug");
@@ -14,6 +41,8 @@ var debugRender = (game) => {
     debugAddRow("Property", "Value"); 
     if (game) {
         debugAddRow("Game ID", game["id"]); 
+        debugAddRow("Board > Columns", game["board"]["settings"]["columns"]); 
+        debugAddRow("Board > Rows", game["board"]["settings"]["rows"]); 
     }
 
     debugWrapper.innerHTML = '';
@@ -24,10 +53,10 @@ class BattleshipClient {
 
     socket;
     game;
-    render;
+    renders;
 
-    constructor(render) {
-        this.render = render;
+    constructor(renders) {
+        this.renders = Array.isArray(renders)? renders: [renders];
         this.loadWebsocket();
     }
 
@@ -63,11 +92,22 @@ class BattleshipClient {
         return (event) => {
             console.log("Received event", event.data) // TODO add type to returns;
             instance.game = JSON.parse(event.data);
-            instance.render(instance.game);
+            instance.renders.forEach(render => render(instance.game));
+        }
+    }
+    
+    attack(row, column) {
+        return () => {
+            console.log("attacking ", row, column);
+            this.send(JSON.stringify({
+                "type" : EVENT_ATTACK,
+                "message": JSON.stringify({ "column" : column, "row" : row })
+            }))
         }
     }
     
     send(event) {
         this.socket.send(event);
     }
+
 }

@@ -21,18 +21,20 @@
 	<script src="/statics/js/game.js"></script>
 	<script>
 		window.onload = function() {
-			window.game = new BattleshipClient(debugRender);
+			window.game = new BattleshipClient([rawRender, debugRender]);
 		}
     </script>
 
 </head>
 <body>
 	<h1> Battleship </h1>
-	<button onclick="game.create()">Start!</button>
-	<button onclick="sendEvent('attack!');">Attack</button>
+
+	<div id="board">Loading...</div>
+	<button onclick="game.create(); this.remove()">Start!</button>
+	
 
 	<br />
 	<br />
-	<div id="debug">Loading...</div>
+	<div id="debug"><div>
 </body>
 </html>
