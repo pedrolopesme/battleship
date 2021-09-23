@@ -1,5 +1,14 @@
-# battle-server
-Battleship Server is a very simple multiplayer gaming server over HTTP 2 and Websocket
+<h1 align="center">
+  <br>
+  <img src="https://github.com/pedrolopesme/battleship/blob/master/web/img/battleship_logo.png?raw=true" alt="Battleship" width="600">
+  <br>
+  Battleshiip
+  <br>
+  <br>
+</h1>
+
+<h4 align="center">A Battleship Game Server.</h4>
+Battleship is a very simple multiplayer gaming server over HTTP 2 and Websocket
 
 ### TODO
 In order to release `0.1`, Battleship Server needs to:
