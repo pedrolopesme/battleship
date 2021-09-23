@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	GAME_ROWS = 2
-	GAME_COLS = 2
+	GAME_ROWS = 10
+	GAME_COLS = 10
 )
 
 type gameService struct {
