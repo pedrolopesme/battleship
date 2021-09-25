@@ -20,10 +20,10 @@ const (
 type GameWebsocket struct {
 	upgrader    websocket.Upgrader
 	socket      *websocket.Conn
-	gameService ports.GameService
+	gameService ports.MatchService
 }
 
-func NewGameWebsocket(gameService ports.GameService) *GameWebsocket {
+func NewGameWebsocket(gameService ports.MatchService) *GameWebsocket {
 	return &GameWebsocket{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  readBufferSize,
@@ -77,7 +77,7 @@ func (gws *GameWebsocket) write(message string) {
 
 // proxies websocket events sent by clients to game service funcs
 // TODO should it be here?
-func (gws *GameWebsocket) proxyEvent(gameService ports.GameService, message []byte) error {
+func (gws *GameWebsocket) proxyEvent(gameService ports.MatchService, message []byte) error {
 	if len(message) == 0 {
 		return errors.New("no message passed")
 	}
@@ -87,15 +87,15 @@ func (gws *GameWebsocket) proxyEvent(gameService ports.GameService, message []by
 		return err
 	}
 
-	if event.EventType == domain.EVENT_NEW_GAME {
-		return gws.createGame(gameService)
+	if event.EventType == domain.EVENT_NEW_MATCH {
+		return gws.createMatch(gameService)
 	}
 
 	return errors.New("no event type mached")
 }
 
 // creates a game and send its json representation to client
-func (gws *GameWebsocket) createGame(gameService ports.GameService) error {
+func (gws *GameWebsocket) createMatch(gameService ports.MatchService) error {
 	game, err := gameService.Create()
 	if err != nil {
 		return err

@@ -1,7 +1,7 @@
 package domain
 
 const (
-	EVENT_NEW_GAME = "new_game"
+	EVENT_NEW_MATCH = "new_match"
 )
 
 type Event struct {

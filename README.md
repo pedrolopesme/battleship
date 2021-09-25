@@ -2,7 +2,7 @@
   <br>
   <img src="https://github.com/pedrolopesme/battleship/blob/master/web/img/battleship_logo.png?raw=true" alt="Battleship" width="600">
   <br>
-  Battleshiip
+  Battleship
   <br>
   <br>
 </h1>

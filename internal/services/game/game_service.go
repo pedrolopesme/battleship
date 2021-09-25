@@ -9,45 +9,45 @@ import (
 )
 
 const (
-	GAME_ROWS = 10
-	GAME_COLS = 10
+	BOARD_ROWS = 10
+	BOARD_COLS = 10
 )
 
 type gameService struct {
-	repository ports.GameRepository
+	repository ports.MatchRepository
 }
 
-func New(repo ports.GameRepository) *gameService {
+func New(repo ports.MatchRepository) *gameService {
 	return &gameService{
 		repository: repo,
 	}
 }
 
-func (srv *gameService) Get(id string) (*domain.Game, error) {
+func (srv *gameService) Get(id string) (*domain.Match, error) {
 	game, err := srv.repository.Get(id)
 	if err != nil {
-		return nil, errors.New("get game from repository has failed")
+		return nil, errors.New("get match from repository has failed")
 	}
 	return game, nil
 }
 
-func (srv *gameService) Create() (*domain.Game, error) {
+func (srv *gameService) Create() (*domain.Match, error) {
 	board := domain.Board{
 		Settings: domain.BoardSettings{
-			Cols: GAME_COLS,
-			Rows: GAME_ROWS,
+			Cols: BOARD_COLS,
+			Rows: BOARD_ROWS,
 		},
 	}
 
-	game := domain.Game{
+	match := domain.Match{
 		ID:    uuid.New().String(),
 		State: domain.GAME_WAITING,
 		Board: board,
 	}
 
-	if err := srv.repository.Save(game); err != nil {
-		return nil, errors.New("impossible to save game")
+	if err := srv.repository.Save(match); err != nil {
+		return nil, errors.New("impossible to save match")
 	}
 
-	return &game, nil
+	return &match, nil
 }

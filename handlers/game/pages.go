@@ -7,10 +7,10 @@ import (
 )
 
 type PagesHandler struct {
-	gamesService ports.GameService
+	gamesService ports.MatchService
 }
 
-func NewPagesHandler(gamesService ports.GameService) *PagesHandler {
+func NewPagesHandler(gamesService ports.MatchService) *PagesHandler {
 	return &PagesHandler{
 		gamesService: gamesService,
 	}
