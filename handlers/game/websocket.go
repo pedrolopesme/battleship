@@ -9,6 +9,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/pedrolopesme/battleship/internal/domain"
+	gameDomain "github.com/pedrolopesme/battleship/internal/domain"
 	"github.com/pedrolopesme/battleship/internal/ports"
 )
 
@@ -20,10 +21,10 @@ const (
 type GameWebsocket struct {
 	upgrader    websocket.Upgrader
 	socket      *websocket.Conn
-	gameService ports.MatchService
+	gameService ports.GameService
 }
 
-func NewGameWebsocket(gameService ports.MatchService) *GameWebsocket {
+func NewGameWebsocket(gameService ports.GameService) *GameWebsocket {
 	return &GameWebsocket{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  readBufferSize,
@@ -62,7 +63,7 @@ func (gws *GameWebsocket) read() {
 		}
 
 		fmt.Println(messageType, string(message))
-		if err := gws.proxyEvent(gws.gameService, message); err != nil {
+		if err := gws.proxyEvent(message); err != nil {
 			fmt.Println("ERROR", err) // TODO replace by a proper logger
 		}
 	}
@@ -77,7 +78,7 @@ func (gws *GameWebsocket) write(message string) {
 
 // proxies websocket events sent by clients to game service funcs
 // TODO should it be here?
-func (gws *GameWebsocket) proxyEvent(gameService ports.MatchService, message []byte) error {
+func (gws *GameWebsocket) proxyEvent(message []byte) error {
 	if len(message) == 0 {
 		return errors.New("no message passed")
 	}
@@ -88,15 +89,29 @@ func (gws *GameWebsocket) proxyEvent(gameService ports.MatchService, message []b
 	}
 
 	if event.EventType == domain.EVENT_NEW_MATCH {
-		return gws.createMatch(gameService)
+		return gws.createMatch()
+	} else if event.EventType == domain.EVENT_ENTER_LOBBY {
+		return gws.enterLobby(event.Message)
 	}
 
 	return errors.New("no event type mached")
 }
 
-// creates a game and send its json representation to client
-func (gws *GameWebsocket) createMatch(gameService ports.MatchService) error {
-	game, err := gameService.Create()
+// enterLobby assigns a player to a waiting room
+func (gws *GameWebsocket) enterLobby(payload string) error {
+	player := gameDomain.Player{}
+	fmt.Println(payload)
+	if err := json.Unmarshal([]byte(payload), &player); err != nil {
+		return err
+	}
+
+	fmt.Println(player)
+	return nil
+}
+
+// createMatch creates a game and send its json representation to client
+func (gws *GameWebsocket) createMatch() error {
+	game, err := gws.gameService.Create()
 	if err != nil {
 		return err
 	}

@@ -28,10 +28,13 @@
 </head>
 <body>
 	<h1> Battleship </h1>
+	<div id="board"></div>
 
-	<div id="board">Loading...</div>
-	<button onclick="game.create(); this.remove()">Start!</button>
-	
+	<div id="lobby">
+		Next Match Players:
+		<hr />
+		<button onclick="game.enterLobby(); this.remove()">Enter Lobby!</button>
+	</div>
 
 	<br />
 	<br />

@@ -1,4 +1,5 @@
-const EVENT_NEW_GAME = "new_game";
+const EVENT_ENTER_LOBBY = "enter_lobby";
+const EVENT_NEW_MATCH = "new_match";
 const EVENT_ATTACK = "attack";
 
 var rawRender = (game) => {
@@ -79,10 +80,20 @@ class BattleshipClient {
         };
     }
 
+    enterLobby() {
+        var playerName = prompt("What is your name?");
+        this.send(JSON.stringify({
+            "type" : EVENT_ENTER_LOBBY,
+            "message": JSON.stringify({
+                "name" : playerName
+            })
+        }))
+    }
+
     create() {
         console.log("Creating game")
         this.send(JSON.stringify({
-            "type" : EVENT_NEW_GAME,
+            "type" : EVENT_NEW_MATCH,
             "message": ""
         }))
     }    
