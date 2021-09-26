@@ -1,4 +1,4 @@
-package game
+package websocket
 
 import (
 	"encoding/json"
@@ -100,12 +100,10 @@ func (gws *GameWebsocket) proxyEvent(message []byte) error {
 // enterLobby assigns a player to a waiting room
 func (gws *GameWebsocket) enterLobby(payload string) error {
 	player := gameDomain.Player{}
-	fmt.Println(payload)
 	if err := json.Unmarshal([]byte(payload), &player); err != nil {
 		return err
 	}
 
-	fmt.Println(player)
 	return nil
 }
 
