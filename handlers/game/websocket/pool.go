@@ -36,13 +36,12 @@ func (p *Pool) Activate() {
 			p.clients[client] = true
 			log.Println("New client onboard. Pool size:", len(p.clients))
 			p.BroadcastMessage("New client joined...")
-			break
 		case client := <-p.unregister:
 			delete(p.clients, client)
 			log.Println("Client logged out. Pool size:", len(p.clients))
-			p.BroadcastMessage(("Client getting out from the match")
-			break
+			p.BroadcastMessage("Client getting out from the match")
+		case message := <-p.broadcast:
+			p.BroadcastMessage(message.MessageBody)
 		}
 	}
-
 }
