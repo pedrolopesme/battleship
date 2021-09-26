@@ -20,22 +20,28 @@ const (
 
 type GameWebsocket struct {
 	upgrader    websocket.Upgrader
-	socket      *websocket.Conn
 	gameService ports.GameService
+	pool        *Pool
 }
 
 func NewGameWebsocket(gameService ports.GameService) *GameWebsocket {
-	return &GameWebsocket{
+	gamesocket := GameWebsocket{
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  readBufferSize,
 			WriteBufferSize: writeBufferSize,
 		},
 		gameService: gameService,
+		pool:        NewPool(),
 	}
+
+	go gamesocket.pool.Activate()
+	return &gamesocket
 }
 
 // Run fires up the main websocket that controls a game battle
 func (gws *GameWebsocket) Run(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Game Websocket Called!")
+
 	// upgrade this connection to a WebSocket
 	// connection
 	conn, err := gws.upgrader.Upgrade(w, r, nil)
@@ -43,38 +49,42 @@ func (gws *GameWebsocket) Run(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	gws.socket = conn
-
-	gws.read()
-}
-
-// Listing is called whenever an event happens
-func (gws *GameWebsocket) read() {
-	if gws.socket == nil {
-		return
+	client := Client{
+		Conn: conn,
+		Pool: gws.pool,
 	}
 
-	for {
-		messageType, message, err := gws.socket.ReadMessage()
-
-		if err != nil {
-			fmt.Println(err) // TODO replace by a proper logger
-			return
-		}
-
-		fmt.Println(messageType, string(message))
-		if err := gws.proxyEvent(message); err != nil {
-			fmt.Println("ERROR", err) // TODO replace by a proper logger
-		}
-	}
+	gws.pool.register <- &client
+	client.Read()
 }
 
-func (gws *GameWebsocket) write(message string) {
-	if err := gws.socket.WriteMessage(1, []byte(message)); err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-}
+// // Listing is called whenever an event happens
+// func (gws *GameWebsocket) read() {
+// 	if gws.socket == nil {
+// 		return
+// 	}
+
+// 	for {
+// 		messageType, message, err := gws.socket.ReadMessage()
+
+// 		if err != nil {
+// 			fmt.Println(err) // TODO replace by a proper logger
+// 			return
+// 		}
+
+// 		fmt.Println(messageType, string(message))
+// 		if err := gws.proxyEvent(message); err != nil {
+// 			fmt.Println("ERROR", err) // TODO replace by a proper logger
+// 		}
+// 	}
+// }
+
+// func (gws *GameWebsocket) write(message string) {
+// 	if err := gws.socket.WriteMessage(1, []byte(message)); err != nil {
+// 		fmt.Println(err.Error())
+// 		return
+// 	}
+// }
 
 // proxies websocket events sent by clients to game service funcs
 // TODO should it be here?
@@ -109,16 +119,16 @@ func (gws *GameWebsocket) enterLobby(payload string) error {
 
 // createMatch creates a game and send its json representation to client
 func (gws *GameWebsocket) createMatch() error {
-	game, err := gws.gameService.Create()
-	if err != nil {
-		return err
-	}
+	// game, err := gws.gameService.Create()
+	// if err != nil {
+	// 	return err
+	// }
 
-	gameJson, err := json.Marshal(game)
-	if err != nil {
-		return err
-	}
+	// gameJson, err := json.Marshal(game)
+	// if err != nil {
+	// 	return err
+	// }
 
-	gws.write(string(gameJson))
+	//gws.write(string(gameJson))
 	return nil
 }
