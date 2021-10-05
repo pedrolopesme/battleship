@@ -1,11 +1,14 @@
 package websocket
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/gorilla/websocket"
 )
 
+// TODO make it all internal
 type Client struct {
 	ID   string
 	Conn *websocket.Conn
@@ -28,5 +31,13 @@ func (c *Client) Read() {
 		message := WsMessage{MessageType: messageType, MessageBody: string(payload)}
 		c.Pool.broadcast <- message
 		log.Printf("Message received: %+v\n", message) // TODO: replace by proper logging
+	}
+}
+
+func (c Client) sendMessage(socketMessage WsMessage) {
+	message, _ := json.Marshal(socketMessage)
+	if err := c.Conn.WriteMessage(1, message); err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 }

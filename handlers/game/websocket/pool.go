@@ -24,7 +24,7 @@ func (p *Pool) BroadcastMessage(message string) {
 	log.Println("Broadcasting Message:", message)
 	for client, _ := range p.clients {
 		log.Println("Sending message to ", client)
-		client.Conn.WriteJSON(WsMessage{MessageType: 1, MessageBody: message})
+		client.sendMessage(WsMessage{MessageType: 1, MessageBody: message})
 	}
 }
 

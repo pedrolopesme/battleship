@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/pedrolopesme/battleship/internal/domain"
 	gameDomain "github.com/pedrolopesme/battleship/internal/domain"
 	"github.com/pedrolopesme/battleship/internal/ports"
 )
@@ -93,15 +92,15 @@ func (gws *GameWebsocket) proxyEvent(message []byte) error {
 		return errors.New("no message passed")
 	}
 
-	event := domain.Event{}
-	if err := json.Unmarshal([]byte(message), &event); err != nil {
+	receivedMessage := WsMessage{}
+	if err := json.Unmarshal([]byte(message), &receivedMessage); err != nil {
 		return err
 	}
 
-	if event.EventType == domain.EVENT_NEW_MATCH {
+	if receivedMessage.MessageType == EVENT_NEW_MATCH {
 		return gws.createMatch()
-	} else if event.EventType == domain.EVENT_ENTER_LOBBY {
-		return gws.enterLobby(event.Message)
+	} else if receivedMessage.MessageType == EVENT_ENTER_LOBBY {
+		return gws.enterLobby(receivedMessage.MessageBody)
 	}
 
 	return errors.New("no event type mached")
