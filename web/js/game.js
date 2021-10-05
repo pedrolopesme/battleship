@@ -54,10 +54,12 @@ class BattleshipClient {
 
     socket;
     game;
-    renders;
+    renders = [];
 
     constructor(renders) {
-        this.renders = Array.isArray(renders)? renders: [renders];
+        if (renders) 
+            this.renders = Array.isArray(renders)? renders: [renders];
+
         this.loadWebsocket();
     }
 
@@ -103,7 +105,9 @@ class BattleshipClient {
         return (event) => {
             console.log("Received event", event.data) // TODO add type to returns;
             instance.game = JSON.parse(event.data);
-            instance.renders.forEach(render => render(instance.game));
+            if (instance.renders) {
+                instance.renders.forEach(render => render(instance.game));
+            }
         }
     }
     
