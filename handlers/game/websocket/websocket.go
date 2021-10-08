@@ -48,13 +48,15 @@ func (gws *GameWebsocket) Run(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	// TODO this cannot happens at the same time
+	// along with client connection.
 	client := Client{
 		Conn: conn,
 		Pool: gws.pool,
 	}
 
 	gws.pool.register <- &client
-	client.Read()
+	client.Listen()
 }
 
 // // Listing is called whenever an event happens

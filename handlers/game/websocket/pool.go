@@ -20,7 +20,10 @@ func NewPool() *Pool {
 	}
 }
 
-func (p *Pool) BroadcastMessage(message string) {
+func (p Pool) PublishClientList() {
+}
+
+func (p Pool) BroadcastMessage(message string) {
 	log.Println("Broadcasting Message:", message)
 	for client, _ := range p.clients {
 		log.Println("Sending message to ", client)

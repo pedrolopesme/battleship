@@ -6,32 +6,36 @@ import (
 	"log"
 
 	"github.com/gorilla/websocket"
+	domain "github.com/pedrolopesme/battleship/internal/domain"
 )
 
 // TODO make it all internal
 type Client struct {
-	ID   string
-	Conn *websocket.Conn
-	Pool *Pool
+	Conn   *websocket.Conn
+	Pool   *Pool
+	Player *domain.Player
 }
 
-func (c *Client) Read() {
-	defer func() {
-		c.Pool.unregister <- c
-		c.Conn.Close()
-	}()
+func (c *Client) Listen() {
+	// As long as we cannot listen to websocket client
+	// we can assume that the client was disconnected
+	defer c.Disconnect()
 
 	for {
-		messageType, payload, err := c.Conn.ReadMessage()
+		_, payload, err := c.Conn.ReadMessage()
 		if err != nil {
 			log.Println(err) // TODO replace by proper logging
 			return
 		}
 
-		message := WsMessage{MessageType: messageType, MessageBody: string(payload)}
-		c.Pool.broadcast <- message
-		log.Printf("Message received: %+v\n", message) // TODO: replace by proper logging
+		log.Printf("Message received: %+v\n", payload) // TODO: replace by proper logging
 	}
+}
+
+// Disconnect removes client from pool
+func (c *Client) Disconnect() {
+	c.Pool.unregister <- c
+	c.Conn.Close()
 }
 
 func (c Client) sendMessage(socketMessage WsMessage) {
